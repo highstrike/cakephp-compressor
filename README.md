@@ -3,12 +3,12 @@ Helper to combine and minify javascript and css files. It also minifies html out
 
 ## Dependencies ##
 - PHP 5.4
-- CakePHP 2.6.*
+- CakePHP 2.6.3
 - Mrclay's Minify!
 
 ## Instalation ##
 * Assuming you have at least PHP 5.4 (for the array bracket annotation)
-* Assuming you already have at least CakePHP 2.6.* running (2.6.* is what i've tested with, might also work for previous versions)
+* Assuming you already have at least CakePHP 2.6.3 running (2.6.3 is what i've tested with, might also work for previous versions)
 * Run composer (as per **composer.json** included) to install [Mrclay's Minify](https://github.com/mrclay/minify)
 * Assuming you have installed Minify in `your-project/lib/vendor/mrclay` open your `Controller/AppController.php` and include composer's autoload `include(ROOT . DS . 'lib/vendor/autoload.php');`
 
