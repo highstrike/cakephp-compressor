@@ -172,9 +172,7 @@ class CompressorHelper extends AppHelper {
             echo $this->Html->css($this->settings['css']['path'] . '/' . $cache);
 
         // development mode, output separately with the HTML helper
-        } else
-            foreach($this->css['extern'] as $file)
-                echo $this->Html->css($file);
+        } else echo $this->Html->css($this->css['extern']);
     }
 
     /**
@@ -204,8 +202,6 @@ class CompressorHelper extends AppHelper {
             echo $this->Html->script($this->settings['js']['path'] . '/' . $cache, $this->settings['js']['async'] == true ? ['async' => 'async'] : []);
 
         // development mode, output separately with the HTML helper
-        } else
-            foreach($this->js['extern'] as $file)
-                echo $this->Html->script($file, $this->settings['js']['async'] == true ? ['async' => 'async'] : []);
+        } else echo $this->Html->script($this->js['extern'], $this->settings['js']['async'] == true ? ['async' => 'async'] : []);
     }
 }

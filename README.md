@@ -15,7 +15,7 @@ Helper to combine and minify javascript and css files. It also minifies html out
 ## Actual Usage ##
 First, open up your `Controller/AppController.php` and add Compressor to your helper variable
 ```php
-public $helpers = ['Compressor'];`
+public $helpers = ['Compressor'];
 ```
 
 #### Configuration ####
@@ -47,7 +47,7 @@ public $helpers = ['Compressor' => [
 ]];
 ```
 #### Minify HTML output ####
-Including the helper in your `Controller/AppController.php` will automagically minify your HTML output assuming you're in production mode -> `Configure::write('debug', 0);`
+Including the helper in your `Controller/AppController.php` will automagically minify your HTML output assuming you're in production mode: `Configure::write('debug', 0);`
 
 #### Combine and Minify css files ####
 The standard way of including css files in your cake project would be to use the HTML helper hence you would have to write something like this `$this->Html->css('site')` where `site.css` is located in `webroot/css/`. If you have multiple css files to include you would probably write something like `$this->Html->css(['site', 'store', 'pagination'])`.
@@ -57,7 +57,7 @@ To combine your css files into 1 minified file you need to replace your syntax a
 $this->Compressor->style(['site', 'store', 'pagination']);
 $this->Compressor->fetch('style');
 ```
-The fetch function actually outputs the generated css file. You should only call this function once in your layout file. You can however call the first function `style` wherever you like, in the layout, in a view file or in an element.
+The `fetch` function actually outputs the generated css file. You should only call this function once in your layout file. You can however call the first function `style` how many times you want and wherever you like, in the layout, in a view file or in an element.
 
 #### Combine and Minify js files ####
 This is almost the same as combining and minifying css files with the exception of syntax change:
@@ -67,16 +67,16 @@ $this->Compressor->fetch('script');
 ```
 
 ## Auto-Versioning ##
-Upon updating any css or js file in development, a new cache file will be generated on production so you can stop worrying about clients pestering you about not seeing any changes or asking you to explain again how to clear their browsers cache :P
+Upon updating any css or js file in development, a new cache file will be generated on production so you can stop worrying about clients pestering you about not seeing any changes or asking you to explain again how to clear the cache of their outdated browser :P
 
 ## Important ##
 The Compressor helper does not support combining and minifying off-site resources (such as those from CDNs). Those files are already minifed and you should include them using the standard cake way. For example including jquery from google's CDN should be done like this:
 ```php
-$this->Html->css('//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+$this->Html->script('//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
 ```
 
 ## Debug ##
-Of course, by default the combination and minification of resources works only when you're in production mode -> `Configure::write('debug', 0);`. But if you wish to see if the helper works without going in full fledge production mode you can use a little switch to simulate a live environment. All you have to do is to add a second parameter on the fetch function and set it to true, like so:
+Of course, by default the combination and minification of resources works only when you're in production mode: `Configure::write('debug', 0);`. But if you wish to see if the helper works without going in full fledge production mode you can use a little switch to simulate a live environment. All you have to do is to add a second parameter on the fetch function and set it to true, like so:
 ```php
 $this->Compressor->fetch('style', true);
 $this->Compressor->fetch('script', true);
