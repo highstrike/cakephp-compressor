@@ -19,7 +19,7 @@ public $helpers = ['Compressor'];
 ```
 
 #### Configuration ####
-The default configuration of the helper is as follows
+The default configuration of the helper is as follows:
 ```php
 // default conf
 public $settings = [
