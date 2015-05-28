@@ -202,6 +202,6 @@ class CompressorHelper extends AppHelper {
             echo $this->Html->script($this->settings['js']['path'] . '/' . $cache, $this->settings['js']['async'] == true ? ['async' => 'async'] : []);
 
         // development mode, output separately with the HTML helper
-        } else echo $this->Html->script($this->js['extern'], $this->settings['js']['async'] == true ? ['async' => 'async'] : []);
+        } else echo $this->Html->script($this->js['extern']);
     }
 }
