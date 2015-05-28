@@ -47,7 +47,7 @@ public $helpers = ['Compressor' => [
 ]];
 ```
 #### Minify HTML output ####
-Including the helper in your `Controller/AppController.php` will automagically minify your HTML output assuming you're in production mode: `Configure::write('debug', 0);`
+Including the helper in your `Controller/AppController.php` will automatically minify your HTML output assuming you're in production mode: `Configure::write('debug', 0);`
 
 #### Combine and Minify css files ####
 The standard way of including css files in your cake project would be to use the HTML helper hence you would have to write something like this `$this->Html->css('site')` where `site.css` is located in `webroot/css/`. If you have multiple css files to include you would probably write something like `$this->Html->css(['site', 'store', 'pagination'])`.
