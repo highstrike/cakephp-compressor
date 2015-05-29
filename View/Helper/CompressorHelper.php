@@ -8,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Will combine and compress JS and CSS files
  *
  * @author Borg
- * @version 0.3
+ * @version 0.4
  */
 class CompressorHelper extends AppHelper {
     // load html helper
@@ -61,21 +61,6 @@ class CompressorHelper extends AppHelper {
     }
 
     /**
-     * Add js files to list
-     * @param array $files
-     */
-    public function script($files = []) {
-        // add each file to group with www_root
-        $group = [];
-        foreach($files as $url)
-            $group[] = rtrim(WWW_ROOT, DS) . str_replace('/', DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.jsBaseUrl'), 'ext' => '.js')));
-
-        // array merge
-        $this->js['intern'] = am($group, $this->js['intern']);
-        $this->js['extern'] = am($files, $this->js['extern']);
-    }
-
-    /**
      * Add css files to list
      * @param array $files
      */
@@ -83,11 +68,26 @@ class CompressorHelper extends AppHelper {
         // add each file to group with www_root
         $group = [];
         foreach($files as $url)
-            $group[] = rtrim(WWW_ROOT, DS) . str_replace('/', DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.cssBaseUrl'), 'ext' => '.css')));
+            $group[] = rtrim(WWW_ROOT, DS) . str_replace([$this->request->webroot, '/'], DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.cssBaseUrl'), 'ext' => '.css')));
 
         // array merge
         $this->css['intern'] = am($group, $this->css['intern']);
         $this->css['extern'] = am($files, $this->css['extern']);
+    }
+
+    /**
+     * Add js files to list
+     * @param array $files
+     */
+    public function script($files = []) {
+        // add each file to group with www_root
+        $group = [];
+        foreach($files as $url)
+            $group[] = rtrim(WWW_ROOT, DS) . str_replace([$this->request->webroot, '/'], DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.jsBaseUrl'), 'ext' => '.js')));
+
+        // array merge
+        $this->js['intern'] = am($group, $this->js['intern']);
+        $this->js['extern'] = am($files, $this->js['extern']);
     }
 
     /**
