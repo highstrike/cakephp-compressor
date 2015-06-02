@@ -8,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Will combine and compress JS and CSS files
  *
  * @author Borg
- * @version 0.4
+ * @version 0.5
  */
 class CompressorHelper extends AppHelper {
     // load html helper
@@ -64,7 +64,19 @@ class CompressorHelper extends AppHelper {
      * Add css files to list
      * @param array $files
      */
-    public function style($files = []) {
+    public function style($files = null) {
+        // nothing?
+        if(is_null($files))
+            return;
+
+        // string? convert to array
+        if(is_string($files))
+            $files = [$files];
+
+        // not array?
+        if(!is_array($files))
+            return;
+
         // add each file to group with www_root
         $group = [];
         foreach($files as $url)
@@ -79,7 +91,19 @@ class CompressorHelper extends AppHelper {
      * Add js files to list
      * @param array $files
      */
-    public function script($files = []) {
+    public function script($files = null) {
+        // nothing?
+        if(is_null($files))
+            return;
+
+        // string? convert to array
+        if(is_string($files))
+            $files = [$files];
+
+        // not array?
+        if(!is_array($files))
+            return;
+
         // add each file to group with www_root
         $group = [];
         foreach($files as $url)
