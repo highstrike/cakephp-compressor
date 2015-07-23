@@ -8,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Will combine and compress JS and CSS files
  *
  * @author Borg
- * @version 0.5
+ * @version 0.6
  */
 class CompressorHelper extends AppHelper {
     // load html helper
@@ -80,7 +80,7 @@ class CompressorHelper extends AppHelper {
         // add each file to group with www_root
         $group = [];
         foreach($files as $url)
-            $group[] = rtrim(WWW_ROOT, DS) . str_replace([$this->request->webroot, '/'], DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.cssBaseUrl'), 'ext' => '.css')));
+            $group[] = $this->path($url, ['pathPrefix' => Configure::read('App.cssBaseUrl'), 'ext' => '.css']);
 
         // array merge
         $this->css['intern'] = am($group, $this->css['intern']);
@@ -107,7 +107,7 @@ class CompressorHelper extends AppHelper {
         // add each file to group with www_root
         $group = [];
         foreach($files as $url)
-            $group[] = rtrim(WWW_ROOT, DS) . str_replace([$this->request->webroot, '/'], DS, $this->assetUrl($url, array('pathPrefix' => Configure::read('App.jsBaseUrl'), 'ext' => '.js')));
+            $group[] = $this->path($url, ['pathPrefix' => Configure::read('App.jsBaseUrl'), 'ext' => '.js']);
 
         // array merge
         $this->js['intern'] = am($group, $this->js['intern']);
@@ -130,6 +130,46 @@ class CompressorHelper extends AppHelper {
         // call private function
         $function = '_' . $what;
         $this->$function();
+    }
+
+    /**
+     * Get full webroot path for an asset
+     * @param string $path
+     * @param array $options
+     * @return string
+     */
+    private function path($path, array $options = []) {
+        // get base and full paths
+        $base = $this->assetUrl($path, $options);
+        $base = $this->webroot($base);
+
+        // do webroot path
+        $filepath = preg_replace('/^' . preg_quote($this->request->webroot, '/') . '/', '', urldecode($base));
+        $webrootPath = WWW_ROOT . str_replace('/', DS, $filepath);
+        if(file_exists($webrootPath))
+            return $webrootPath;
+
+        // must be theme or plugin then?
+        $segments = explode('/', ltrim($filepath, '/'));
+
+        // do theme path
+        if ($segments[0] === 'theme') {
+            $theme = $segments[1];
+            unset($segments[0], $segments[1]);
+            $themePath = str_replace('/', DS, App::themePath($theme)) . 'webroot' . DS . implode(DS, $segments);
+
+            return $themePath;
+
+        // do plugin path
+        } else {
+            $plugin = Inflector::camelize($segments[0]);
+            if (CakePlugin::loaded($plugin)) {
+                unset($segments[0]);
+                $pluginPath = str_replace('/', DS, CakePlugin::path($plugin)) . 'webroot' . DS . implode(DS, $segments);
+
+                return $pluginPath;
+            }
+        }
     }
 
     /**
