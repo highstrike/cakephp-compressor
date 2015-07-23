@@ -66,6 +66,13 @@ $this->Compressor->script(['jquery.min', 'frontend']);
 $this->Compressor->fetch('script');
 ```
 
+#### Theme and Plugin support ####
+You can also compress any css or js file from a plugin or template
+For example this is how you load the js file 'test.js' from the plugin Evo.
+```php
+$this->Compressor->script('Evo.test');
+```
+
 ## Auto-Versioning ##
 Upon updating any css or js file in development, a new cache file will be generated on production so you can stop worrying about clients pestering you about not seeing any changes or asking you to explain again how to clear the cache of their outdated browser :P
 
