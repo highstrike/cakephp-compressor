@@ -8,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Will combine and compress JS and CSS files
  *
  * @author Borg
- * @version 0.6
+ * @version 0.7
  */
 class CompressorHelper extends AppHelper {
     // load html helper
@@ -193,6 +193,31 @@ class CompressorHelper extends AppHelper {
     }
 
     /**
+     * Chunk content of files into array
+     * @param array $files
+     * @return array
+     */
+    private function chunks($files = []) {
+        $index = 0;
+        $output[$index] = null;
+
+        // go through each file
+        foreach($files as $idx => $file) {
+            $content = "\n" . file_get_contents($file) . "\n";
+            if(strlen($output[$index] . $content) > 100000) {
+                $index++;
+                $output[$index] = null;
+            }
+
+            // concat
+            $output[$index] .= $content;
+        }
+
+        // return array
+        return $output;
+    }
+
+    /**
      * HTML compressor
      * @param string $content
      * @return string
@@ -216,20 +241,24 @@ class CompressorHelper extends AppHelper {
             // no cache file? write it
             $cache = $this->filename('css');
             if(!file_exists($this->settings['css']['route'] . DS . $cache)) {
-                // get content
-                $content = null;
-                foreach($this->css['intern'] as $file)
-                    $content .= "\n" . file_get_contents($file) . "\n";
+                // get chunks
+                $output = null;
+                $chunks = $this->chunks($this->css['intern']);
 
                 // replace relative paths to absolute paths
-                $content = preg_replace('/(\.\.\/)+/i', Router::url('/', true), $content);
+                foreach($chunks as $idx => $content)
+                    $chunks[$idx] = preg_replace('/(\.\.\/)+/i', Router::url('/', true), $content);
 
                 // compress?
                 if($this->settings['css']['compression'])
-                    $content = trim(\Minify_CSS::minify($content, ['preserveComments' => false]));
+                    foreach($chunks as $content)
+                        $output .= trim(\Minify_CSS::minify($content, ['preserveComments' => false]));
+
+                // not compressed
+                else $output = implode("\n", $chunks);
 
                 // write to file
-                file_put_contents($this->settings['css']['route'] . DS . $cache, $content);
+                file_put_contents($this->settings['css']['route'] . DS . $cache, $output);
             }
 
             // output with the HTML helper
@@ -249,17 +278,20 @@ class CompressorHelper extends AppHelper {
             // no cache file? write it
             $cache = $this->filename('js');
             if(!file_exists($this->settings['js']['route'] . DS . $cache)) {
-                // get content
-                $content = null;
-                foreach($this->js['intern'] as $file)
-                    $content .= "\n" . file_get_contents($file) . "\n";
+                // get chunks
+                $output = null;
+                $chunks = $this->chunks($this->js['intern']);
 
                 // compress?
                 if($this->settings['js']['compression'])
-                    $content = trim(\Minify_JS_ClosureCompiler::minify($content));
+                    foreach($chunks as $content)
+                        $output .= trim(\Minify_JS_ClosureCompiler::minify($content));
+
+                // not compressed
+                else $output = implode("\n", $chunks);
 
                 // write to file
-                file_put_contents($this->settings['js']['route'] . DS . $cache, $content);
+                file_put_contents($this->settings['js']['route'] . DS . $cache, $output);
             }
 
             // output with the HTML helper
