@@ -9,6 +9,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "mrclay/minify":"*"
+        "mrclay/minify":"2.3.1"
     }
 }
